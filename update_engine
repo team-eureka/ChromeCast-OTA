@@ -2,6 +2,4 @@
 
 echo "Running PwnedCast Update Check"
 /bin/busybox sh /chrome/pwnedcast-update.sh
-echo "Sleeping 20 Hours"
-sleep 72000
 exit 0
