@@ -63,8 +63,8 @@ do
 			echo "PWNEDCAST-OTA: Update Downloaded Successfully"
 			echo "PWNEDCAST-OTA: Downloading and Verifiying MD5 Hash"
 			
-			MD5DL="$(busybox wget -q $MD5Hash -O - )"
 			MD5Check=`md5sum /cache/flashcast.zip | awk '{ print $1 }'`
+			MD5DL="$(busybox wget -q $MD5Hash -O - )"
 			
 			# Did MD5 Download Successfully?
 			if [ $? -ne 0 ];
@@ -72,6 +72,7 @@ do
 				echo "PWNEDCAST-OTA: Error Downloading MD5, Terminating!"
 				exit 1
 			else
+				# Compare MD5's
 				if [ "$MD5DL" != "$MD5Check" ]
 				then
 					# Bad MD5 Match
