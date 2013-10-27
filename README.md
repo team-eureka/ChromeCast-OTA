@@ -11,4 +11,6 @@ This is included in all of my released rooted images on XDA after 10/26/2013, an
 
 <b>Disclaimer:</b>
 
-This software will report your serial # and build # to my server. The reason for this is so I can do rolling updates, track unique installs, and flag select devices for test images. If you wish to disable this software, read more in the release thread on XDA.
+This software will report a hash of your serial # and build # to my server. The reason for this is so I can do rolling updates, track unique installs, and flag select devices for test images. If you wish to disable this software, read more in the release thread on XDA.
+
+Your raw serial # is not reported at any time during use of this software.
