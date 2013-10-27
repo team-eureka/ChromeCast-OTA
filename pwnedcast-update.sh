@@ -1,11 +1,11 @@
 #!/bin/busybox
 
-#Start infinite loop to imitate the google updater
+# Start infinite loop to imitate the google updater
 while true
 do
 	echo "PWNEDCAST-OTA: Running PwnedCast OTA Updater!"
 
-	#are we allowed to run?
+	# Are we allowed to run?
 	if [ -f /data/disable_ota ]
 	then
 		echo "PWNEDCAST-OTA: OTA updates disabled per user request, Terminating"
@@ -20,18 +20,18 @@ do
 		exit 0
 	fi
 
-	#delete any existing OTA
+	# Delete any existing OTA
 	if [ -f /cache/flashcast.zip ]
 	then
 		rm /cache/flashcast.zip
 	fi
 
-	#variables
+	# Variables used for the update check
 	BuildVersion="$(getprop ro.build.version.incremental)"
-	Serial="$(cat /factory/serial.txt)"
+	Serial="$(cat /factory/serial.txt)" # This is ONLY used to help me with release batches.
 	URL="http://servernetworktech.com/pwnedcast-ota/update.php?version=$BuildVersion&serial=$Serial"
 
-	#Check for the update
+	# Check for the update
 	echo "PWNEDCAST-OTA: Checking for Updates"
 	Response="$(busybox wget -q $URL -O - )"
 
@@ -50,7 +50,12 @@ do
 		if [ $? -ne 0 ];
 		then
 			echo "PWNEDCAST-OTA: Error Downloading, Terminating!"
-			rm /cache/flashcast.zip
+			
+			# Delete the failed update if it exists
+			if [ -f /cache/flashcast.zip ]
+			then
+				rm /cache/flashcast.zip
+			fi
 			exit 1
 		else
 			echo "PWNEDCAST-OTA: Update Downloaded Successfully"
@@ -61,7 +66,7 @@ do
 		echo "PWNEDCAST-OTA: No Update Required!"
 	fi
 
-	# sleep a while
+	# Sleep a while
 	echo "PWNEDCAST-OTA: Sleeping 20 hours"
 	sleep 72000
 
