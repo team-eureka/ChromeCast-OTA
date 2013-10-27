@@ -73,20 +73,17 @@ do
 			else
 			
 				# Check of MD5 is OK
-				MD1=`busybox md5sum /cache/eureka_image.zip -c /cache/eureka_image.zip.md5 | busybox awk '{ print $2 }'`
+				MD1=`busybox md5sum -c /cache/eureka_image.zip.md5 | busybox awk '{ print $2 }'`
 
 				# Compare MD5's
 				if [ "$MD1" != "OK" ]
 				then
 					# Bad MD5 Match
-					echo "PWNEDCAST-OTA: Failed to verify, Deleting file and terminating."
+					echo "PWNEDCAST-OTA: Failed to verify, Deleting files and terminating."
 					
 					# Delete the failed update if it exists
-					if [ -f /cache/eureka_image.zip ]
-					then
-						rm /cache/eureka_image.zip
-						rm /cache/eureka_image.zip.md5
-					fi
+					rm /cache/eureka_image.zip
+					rm /cache/eureka_image.zip.md5
 					exit 1
 				else
 					# All went good
