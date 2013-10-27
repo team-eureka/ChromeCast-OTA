@@ -7,4 +7,4 @@ This is a work in progress, and should not be used at this time.
 
 <b>Disclaimer:</b>
 
-This software will report your serial # and build # of your chromecast device to my server. The reason I require your serial # is so I can track the number of unique installs, as well as do roll-out updates to prevent everyone from downloading at once. Another nice feature is it allows me to define "dev" devices for test images.
+This software will report your serial # and build # to my server. The reason for this is so I can do rolling updates, track unique installs, and flag select devices for test images. If you wish to disable this software, read more in the release thread on XDA.
