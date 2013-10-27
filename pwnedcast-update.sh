@@ -8,7 +8,15 @@ do
 	#are we allowed to run?
 	if [ -f /data/disable_ota ]
 	then
-		echo "PWNEDCAST-OTA: OTA updates disabled per user request, exiting"
+		echo "PWNEDCAST-OTA: OTA updates disabled per user request, Terminating"
+		
+		# Create a empty loop so this script is never ran again.
+		while true
+		do
+			sleep 72000
+		done
+		
+		# Somehow, if we break out, exit, do NOT continue!
 		exit 0
 	fi
 
@@ -25,13 +33,20 @@ do
 
 	#Check for the update
 	echo "PWNEDCAST-OTA: Checking for Updates"
-	Response="$(busybox wget -q $URL -O -)"
+	Response="$(busybox wget -q $URL -O - )"
 
+	# Error checking for update, due to server/web issues
+	if [ $? -ne 0 ]
+	then
+		echo "PWNEDCAST-OTA: Error Checking for update, Connection Issues"
+		echo "PWNEDCAST-OTA: Restarting Service in 5 Minutes"
+		sleep 300
+		exit 1
 	# Update is available, do something
-	if [ "$Response" != "NoUpdate" ]
+	elif [ "$Response" != "NoUpdate" ]
 	then
 		echo "PWNEDCAST-OTA: Update Found! Downloading now!"
-		busybox wget "$Response" -O /cache/eureka_image.zip >/dev/null 2>&1
+		busybox wget -q "$Response" -O /cache/eureka_image.zip
 		if [ $? -ne 0 ];
 		then
 			echo "PWNEDCAST-OTA: Error Downloading, Terminating!"
