@@ -28,7 +28,7 @@ do
 
 	# Variables used for the update check
 	BuildVersion="$(getprop ro.build.version.incremental)"
-	SerialHash=`busybox sha1sum /factory/serial.txt | awk '{ print $1 }'` # We only use your serial hash
+	SerialHash=`busybox sha1sum /factory/serial.txt | busybox awk '{ print $1 }'` # We only use your serial hash
 	URL="http://servernetworktech.com/pwnedcast-ota/update.php?version=$BuildVersion&serial=$SerialHash"
 	MD5Hash="$URL.md5"
 
@@ -63,7 +63,7 @@ do
 			echo "PWNEDCAST-OTA: Update Downloaded Successfully"
 			echo "PWNEDCAST-OTA: Downloading and Verifiying MD5 Hash"
 			
-			MD5Check=`md5sum /cache/flashcast.zip | awk '{ print $1 }'`
+			MD5Check=`busybox md5sum /cache/flashcast.zip | busybox awk '{ print $1 }'`
 			MD5DL="$(busybox wget -q $MD5Hash -O - )"
 			
 			# Did MD5 Download Successfully?
