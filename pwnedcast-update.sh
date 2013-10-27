@@ -30,6 +30,7 @@ do
 	BuildVersion="$(getprop ro.build.version.incremental)"
 	SerialHash=`busybox sha1sum /factory/serial.txt | awk '{ print $1 }'` # We only use your serial hash
 	URL="http://servernetworktech.com/pwnedcast-ota/update.php?version=$BuildVersion&serial=$SerialHash"
+	MD5Hash="$URL.md5"
 
 	# Check for the update
 	echo "PWNEDCAST-OTA: Checking for Updates"
@@ -58,9 +59,37 @@ do
 			fi
 			exit 1
 		else
+			#Download was good, now download MD5 and check
 			echo "PWNEDCAST-OTA: Update Downloaded Successfully"
-			echo "PWNEDCAST-OTA: Rebooting into Flashcast To Update..."
-			reboot recovery
+			echo "PWNEDCAST-OTA: Downloading and Verifiying MD5 Hash"
+			
+			MD5DL="$(busybox wget -q $MD5Hash -O - )"
+			MD5Check=`md5sum /cache/flashcast.zip | awk '{ print $1 }'`
+			
+			# Did MD5 Download Successfully?
+			if [ $? -ne 0 ];
+			then
+				echo "PWNEDCAST-OTA: Error Downloading MD5, Terminating!"
+				exit 1
+			else
+				if [ "$MD5DL" != "$MD5Check" ]
+				then
+					# Bad MD5 Match
+					echo "PWNEDCAST-OTA: Failed to verify, Deleting file and terminating."
+					
+					# Delete the failed update if it exists
+					if [ -f /cache/flashcast.zip ]
+					then
+						rm /cache/flashcast.zip
+					fi
+					exit 1
+				else
+					# All went good
+					echo "PWNEDCAST-OTA: File Verified Successfully!"
+					echo "PWNEDCAST-OTA: Rebooting into Flashcast To Update..."
+					reboot recovery	
+				fi
+			fi
 		fi
 	else
 		echo "PWNEDCAST-OTA: No Update Required!"
