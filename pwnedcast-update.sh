@@ -30,7 +30,6 @@ do
 	BuildVersion="$(getprop ro.build.version.incremental)"
 	SerialHash=`busybox sha1sum /factory/serial.txt | busybox awk '{ print $1 }'` # We only use your serial hash
 	URL="http://servernetworktech.com/pwnedcast-ota/update.php?version=$BuildVersion&serial=$SerialHash"
-	MD5Hash="$URL.md5"
 
 	# Check for the update
 	echo "PWNEDCAST-OTA: Checking for Updates"
@@ -63,6 +62,7 @@ do
 			echo "PWNEDCAST-OTA: Update Downloaded Successfully"
 			echo "PWNEDCAST-OTA: Downloading and Verifiying MD5 Hash"
 			
+			MD5Hash="$Response.md5"
 			busybox wget -q "$MD5Hash" -O /cache/eureka_image.zip.md5
 			
 			# Did MD5 Download Successfully?
