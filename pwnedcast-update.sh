@@ -6,7 +6,7 @@ do
 	echo "PWNEDCAST-OTA: Running PwnedCast OTA Updater!"
 
 	# Are we allowed to run?
-	if [ -f /data/disable_ota ]
+	if [ -f /chrome/disable_ota ]
 	then
 		echo "PWNEDCAST-OTA: OTA updates disabled per user request, Terminating"
 		
