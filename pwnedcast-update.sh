@@ -63,7 +63,6 @@ do
 			echo "PWNEDCAST-OTA: Update Downloaded Successfully"
 			echo "PWNEDCAST-OTA: Downloading and Verifiying MD5 Hash"
 			
-			MD5Check=`busybox md5sum /cache/eureka_image.zip`
 			MD5DL="$(busybox wget -q $MD5Hash -O - )"
 			
 			# Did MD5 Download Successfully?
@@ -72,8 +71,13 @@ do
 				echo "PWNEDCAST-OTA: Error Downloading MD5, Terminating!"
 				exit 1
 			else
+			
+				# Figure out MD5's
+				MD51=`busybox md5sum /cache/eureka_image.zip | busybox awk '{ print $1 }'`
+				MD52=$(awk '{print $1}' "$MD5DL")
+				
 				# Compare MD5's
-				if [ "$MD5DL" != "$MD5Check" ]
+				if [ "$MD1" != "$MD2" ]
 				then
 					# Bad MD5 Match
 					echo "PWNEDCAST-OTA: Failed to verify, Deleting file and terminating."
