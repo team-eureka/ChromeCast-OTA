@@ -28,8 +28,8 @@ do
 
 	# Variables used for the update check
 	BuildVersion="$(getprop ro.build.version.incremental)"
-	Serial="$(cat /factory/serial.txt)" # This is ONLY used to help me with release batches.
-	URL="http://servernetworktech.com/pwnedcast-ota/update.php?version=$BuildVersion&serial=$Serial"
+	SerialHash=`busybox sha1sum /factory/serial.txt | awk '{ print $1 }'` # We only use your serial hash
+	URL="http://servernetworktech.com/pwnedcast-ota/update.php?version=$BuildVersion&serial=$SerialHash"
 
 	# Check for the update
 	echo "PWNEDCAST-OTA: Checking for Updates"
