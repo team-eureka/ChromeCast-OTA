@@ -21,9 +21,9 @@ do
 	fi
 
 	# Delete any existing OTA
-	if [ -f /cache/eureka_image.zip ]
+	if [ -f /data/eureka_image.zip ]
 	then
-		rm /cache/eureka_image.zip
+		rm /data/eureka_image.zip
 	fi
 
 	# Variables used for the update check
@@ -46,15 +46,15 @@ do
 	elif [ "$Response" != "NoUpdate" ]
 	then
 		echo "PWNEDCAST-OTA: Update Found! Downloading now!"
-		busybox wget -q "$Response" -O /cache/eureka_image.zip
+		busybox wget -q "$Response" -O /data/eureka_image.zip
 		if [ $? -ne 0 ];
 		then
 			echo "PWNEDCAST-OTA: Error Downloading, Terminating!"
 			
 			# Delete the failed update if it exists
-			if [ -f /cache/eureka_image.zip ]
+			if [ -f /data/eureka_image.zip ]
 			then
-				rm /cache/eureka_image.zip
+				rm /data/eureka_image.zip
 			fi
 			exit 1
 		else
@@ -63,7 +63,7 @@ do
 			echo "PWNEDCAST-OTA: Downloading and Verifiying MD5 Hash"
 			
 			MD5Hash="$Response.md5"
-			busybox wget -q "$MD5Hash" -O /cache/eureka_image.zip.md5
+			busybox wget -q "$MD5Hash" -O /data/eureka_image.zip.md5
 			
 			# Did MD5 Download Successfully?
 			if [ $? -ne 0 ];
@@ -73,7 +73,7 @@ do
 			else
 			
 				# Check of MD5 is OK
-				MD1=`busybox md5sum -c /cache/eureka_image.zip.md5 | busybox awk '{ print $2 }'`
+				MD1=`busybox md5sum -c /data/eureka_image.zip.md5 | busybox awk '{ print $2 }'`
 
 				# Compare MD5's
 				if [ "$MD1" != "OK" ]
@@ -82,15 +82,15 @@ do
 					echo "PWNEDCAST-OTA: Failed to verify, Deleting files and terminating."
 					
 					# Delete the failed update if it exists
-					rm /cache/eureka_image.zip
-					rm /cache/eureka_image.zip.md5
+					rm /data/eureka_image.zip
+					rm /data/eureka_image.zip.md5
 					exit 1
 				else
 					# All went good
 					echo "PWNEDCAST-OTA: File Verified Successfully!"
 					
 					# Delete md5 file as no need to keep it
-					rm /cache/eureka_image.zip.md5
+					rm /data/eureka_image.zip.md5
 					
 					echo "PWNEDCAST-OTA: Rebooting into Flashcast To Update..."
 					reboot recovery	
