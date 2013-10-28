@@ -1,5 +1,0 @@
-#!/bin/sh
-
-echo "Running PwnedCast Update Check"
-/bin/busybox sh /chrome/pwnedcast-update.sh
-exit 0
