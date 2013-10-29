@@ -3,7 +3,7 @@ PwnedCast-OTA
 
 an OTA update engine for rooted Google Ghromecasts
 
-This is a constant work in progress, but currently is considered STABLE.
+This is still in development, but should be considered stable enough for daily use.
 
 <b>How To Use:</b>
 
