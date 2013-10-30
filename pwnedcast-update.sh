@@ -74,11 +74,10 @@ do
 			else
 			
 				# Check of MD5 is OK
-				MD5File=`cat /data/eureka_image.zip.md5 | busybox awk '{ print $1 }'`
-				FileMD5=`busybox md5sum /data/eureka_image.zip | busybox awk '{ print $1 }'`
+				MD1=`busybox md5sum -c /data/eureka_image.zip.md5 | busybox awk '{ print $2 }'`
 
 				# Compare MD5's
-				if [ "$MD5File" != "FileMD5" ]
+				if [ "$MD1" != "OK" ]
 				then
 					# Bad MD5 Match
 					echo "PWNEDCAST-OTA: Failed to verify, Deleting files and terminating."
