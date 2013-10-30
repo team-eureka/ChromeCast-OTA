@@ -75,7 +75,7 @@ do
 			
 				# Check of MD5 is OK
 				MD5File=`cat /data/eureka_image.zip.md5 | busybox awk '{ print $1 }'`
-				FileMD5=`busybox md5sum /data/eureka_image.zip.md | busybox awk '{ print $1 }'`
+				FileMD5=`busybox md5sum /data/eureka_image.zip | busybox awk '{ print $1 }'`
 
 				# Compare MD5's
 				if [ "$MD5File" != "FileMD5" ]
