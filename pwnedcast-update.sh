@@ -19,12 +19,22 @@ do
 		# Somehow, if we break out, exit, do NOT continue!
 		exit 0
 	fi
+	
+	# Are we already running?
+	if [ -f /data/.pwnedcastOTA ]
+	then
+		echo "PWNEDCAST-OTA: Already Running, Terminating"
+		exit 1
+	fi
 
 	# Delete any existing OTA
 	if [ -f /data/eureka_image.zip ]
 	then
 		rm /data/eureka_image.zip
 	fi
+
+	# We are running, so the world must know
+	touch /data/.pwnedcastOTA
 
 	# Variables used for the update check
 	BuildVersion="$(getprop ro.build.version.incremental)"
@@ -41,8 +51,13 @@ do
 	then
 		echo "PWNEDCAST-OTA: Error Checking for update, Connection Issues"
 		echo "PWNEDCAST-OTA: Restarting Service in 5 Minutes"
+	
+		# Delete run file
+		rm /data/.pwnedcastOTA
+	
 		sleep 300
 		exit 1
+	
 	# Update is available, do something
 	elif [ "$Response" != "NoUpdate" ]
 	then
@@ -57,6 +72,10 @@ do
 			then
 				rm /data/eureka_image.zip
 			fi
+			
+			# Delete run file
+			rm /data/.pwnedcastOTA
+			
 			exit 1
 		else
 			#Download was good, now download MD5 and check
@@ -69,6 +88,9 @@ do
 			# Did MD5 Download Successfully?
 			if [ $? -ne 0 ];
 			then
+				# Delete run file
+				rm /data/.pwnedcastOTA
+				
 				echo "PWNEDCAST-OTA: Error Downloading MD5, Terminating!"
 				exit 1
 			else
@@ -83,8 +105,10 @@ do
 					echo "PWNEDCAST-OTA: Failed to verify, Deleting files and terminating."
 					
 					# Delete the failed update if it exists
-					rm /data/eureka_image.zip
-					rm /data/eureka_image.zip.md5
+					rm /data/eureka_image.zip /data/eureka_image.zip.md5
+					
+					# Delete run file
+					rm /data/.pwnedcastOTA
 					exit 1
 				else
 					# All went good
@@ -92,6 +116,9 @@ do
 					
 					# Delete md5 file as no need to keep it
 					rm /data/eureka_image.zip.md5
+					
+					# Delete run file
+					rm /data/.pwnedcastOTA
 					
 					echo "PWNEDCAST-OTA: Rebooting into Flashcast To Update..."
 					reboot recovery	
@@ -101,7 +128,10 @@ do
 	else
 		echo "PWNEDCAST-OTA: No Update Required!"
 	fi
-
+	
+	# Delete run file, we sleep now
+	rm /data/.pwnedcastOTA
+	
 	# Sleep a while
 	echo "PWNEDCAST-OTA: Sleeping 20 hours"
 	sleep 72000
