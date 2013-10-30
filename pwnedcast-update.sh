@@ -21,7 +21,7 @@ do
 	fi
 	
 	# Are we already running?
-	if [ -f /data/.pwnedcastOTA ]
+	if [ -f /tmp/.pwnedcastOTA ]
 	then
 		echo "PWNEDCAST-OTA: Already Running, Terminating"
 		exit 1
@@ -34,7 +34,7 @@ do
 	fi
 
 	# We are running, so the world must know
-	touch /data/.pwnedcastOTA
+	touch /tmp/.pwnedcastOTA
 
 	# Variables used for the update check
 	BuildVersion="$(getprop ro.build.version.incremental)"
@@ -53,7 +53,7 @@ do
 		echo "PWNEDCAST-OTA: Restarting Service in 5 Minutes"
 	
 		# Delete run file
-		rm /data/.pwnedcastOTA
+		rm /tmp/.pwnedcastOTA
 	
 		sleep 300
 		exit 1
@@ -74,7 +74,7 @@ do
 			fi
 			
 			# Delete run file
-			rm /data/.pwnedcastOTA
+			rm /tmp/.pwnedcastOTA
 			
 			exit 1
 		else
@@ -89,7 +89,7 @@ do
 			if [ $? -ne 0 ];
 			then
 				# Delete run file
-				rm /data/.pwnedcastOTA
+				rm /tmp/.pwnedcastOTA
 				
 				echo "PWNEDCAST-OTA: Error Downloading MD5, Terminating!"
 				exit 1
@@ -108,7 +108,7 @@ do
 					rm /data/eureka_image.zip /data/eureka_image.zip.md5
 					
 					# Delete run file
-					rm /data/.pwnedcastOTA
+					rm /tmp/.pwnedcastOTA
 					exit 1
 				else
 					# All went good
@@ -118,7 +118,7 @@ do
 					rm /data/eureka_image.zip.md5
 					
 					# Delete run file
-					rm /data/.pwnedcastOTA
+					rm /tmp/.pwnedcastOTA
 					
 					echo "PWNEDCAST-OTA: Rebooting into Flashcast To Update..."
 					reboot recovery	
@@ -130,7 +130,7 @@ do
 	fi
 	
 	# Delete run file, we sleep now
-	rm /data/.pwnedcastOTA
+	rm /tmp/.pwnedcastOTA
 	
 	# Sleep a while
 	echo "PWNEDCAST-OTA: Sleeping 20 hours"
