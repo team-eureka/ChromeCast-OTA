@@ -19,7 +19,10 @@ do
 			sleep 72000
 		done
 		
-		# Somehow, if we break out, exit, do NOT continue!
+		# Delete run file
+		rm /tmp/.pwnedcastOTA
+		
+		# Somehow, if we break out, exit, do NOT continue
 		exit 0
 	fi
 	
