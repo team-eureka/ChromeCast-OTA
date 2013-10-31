@@ -1,5 +1,8 @@
 #!/bin/busybox
 
+# We are running, so the world must know
+touch /tmp/.pwnedcastOTA
+
 # Start infinite loop to imitate the google updater
 while true
 do
@@ -32,9 +35,6 @@ do
 	then
 		rm /data/eureka_image.zip
 	fi
-
-	# We are running, so the world must know
-	touch /tmp/.pwnedcastOTA
 
 	# Variables used for the update check
 	BuildVersion="$(getprop ro.build.version.incremental)"
@@ -128,9 +128,6 @@ do
 	else
 		echo "PWNEDCAST-OTA: No Update Required!"
 	fi
-	
-	# Delete run file, we sleep now
-	rm /tmp/.pwnedcastOTA
 	
 	# Sleep a while
 	echo "PWNEDCAST-OTA: Sleeping 20 hours"
