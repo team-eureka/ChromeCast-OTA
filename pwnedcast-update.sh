@@ -1,8 +1,5 @@
 #!/bin/busybox
 
-# We are running, so the world must know
-touch /tmp/.pwnedcastOTA
-
 # Start infinite loop to imitate the google updater
 while true
 do
@@ -32,6 +29,9 @@ do
 		echo "PWNEDCAST-OTA: Already Running, Terminating"
 		exit 1
 	fi
+	
+	# We are running, so the world must know
+	touch /tmp/.pwnedcastOTA
 
 	# Delete any existing OTA
 	if [ -f /data/eureka_image.zip ]
@@ -135,5 +135,8 @@ do
 	# Sleep a while
 	echo "PWNEDCAST-OTA: Sleeping 20 hours"
 	sleep 72000
+	
+	# Delete run file
+	rm /tmp/.pwnedcastOTA
 
 done
