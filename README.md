@@ -7,7 +7,7 @@ This is still in development, but should be considered stable enough for daily u
 
 <b>How To Use:</b>
 
-This is included in all of my released rooted images on XDA after 10/26/2013, and will run automatically.
+This is included in all of my released rooted images on XDA after 11/1/2013, and will run automatically.
 
 <b>Disclaimer:</b>
 
