@@ -123,6 +123,9 @@ do
 					# Delete run file
 					rm /tmp/.pwnedcastOTA
 					
+					# we do this as a file needs to exist for content_shel ota update to work
+					touch /cache/ota.zip
+					
 					echo "PWNEDCAST-OTA: Rebooting into Flashcast To Update..."
 					reboot recovery	
 				fi
