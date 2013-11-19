@@ -127,7 +127,7 @@ do
 					touch /cache/ota.zip
 					
 					echo "PWNEDCAST-OTA: Rebooting into Flashcast To Update..."
-					reboot recovery	
+					curl -H "Content-Type: application/json" http://localhost:8008/setup/reboot -d '{"params":"ota"}' -X POST
 				fi
 			fi
 		fi
