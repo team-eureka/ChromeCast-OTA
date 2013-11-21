@@ -43,7 +43,7 @@ do
 	BuildVersion="$(getprop ro.build.version.incremental)"
 	BuildRevision="$(cat /chrome/pwnedcast_ver)"
 	SerialHash=`busybox sha1sum /factory/serial.txt | busybox awk '{ print $1 }'` # We only use your serial hash
-	URL="http://pwnedcast.servernetworktech.com/ota/update.php?version=$BuildVersion-$BuildRevision&serial=$SerialHash"
+	URL="http://ota.team-eureka.com/ota/update.php?version=$BuildVersion-$BuildRevision&serial=$SerialHash"
 
 	# Check for the update
 	echo "PWNEDCAST-OTA: Checking for Updates"
