@@ -1,14 +1,34 @@
 #!/bin/busybox
 
+# ROM Name - Used in logcat output
+ROMName="EurekaROM"
+
+# Build version, revision and device serial hash, normally no need to change these
+BuildVersion="$(getprop ro.build.version.incremental)"
+BuildRevision="$(cat /chrome/pwnedcast_ver)"
+SerialHash=`busybox sha1sum /factory/serial.txt | busybox awk '{ print $1 }'` # We only use your serial hash
+
+#URL for the Update Server
+URL="http://ota.team-eureka.com/ota/update.php?version=$BuildVersion-$BuildRevision&serial=$SerialHash"
+
+# Prefixed log messages are easier to distinguish
+pLog() {
+        echo "$ROMName-OTA: $1"
+}
+
+##################################
+# Now we start the actual script #
+##################################
+
 # Start infinite loop to imitate the google updater
 while true
 do
-	echo "CHROMECAST-OTA: Running PwnedCast OTA Updater!"
+	pLog "Running $ROMName-OTA Updater!"
 
 	# Are we allowed to run?
 	if [ -f /chrome/disable_ota ]
 	then
-		echo "CHROMECAST-OTA: OTA updates disabled per user request, Terminating"
+		pLog "OTA updates disabled per user request, Terminating"
 		
 		# Create a empty loop so this script is never ran again.
 		while true
@@ -26,7 +46,7 @@ do
 	# Are we already running?
 	if [ -f /tmp/.chromecastOTA ]
 	then
-		echo "CHROMECAST-OTA: Already Running, Terminating"
+		pLog "Already Running, Terminating"
 		exit 1
 	fi
 	
@@ -39,21 +59,15 @@ do
 		rm /cache/eureka_image.zip
 	fi
 
-	# Variables used for the update check
-	BuildVersion="$(getprop ro.build.version.incremental)"
-	BuildRevision="$(cat /chrome/pwnedcast_ver)"
-	SerialHash=`busybox sha1sum /factory/serial.txt | busybox awk '{ print $1 }'` # We only use your serial hash
-	URL="http://ota.team-eureka.com/ota/update.php?version=$BuildVersion-$BuildRevision&serial=$SerialHash"
-
 	# Check for the update
-	echo "CHROMECAST-OTA: Checking for Updates"
+	pLog "Checking for Updates"
 	Response="$(busybox wget -q $URL -O - )"
 
 	# Error checking for update, due to server/web issues
 	if [ $? -ne 0 ]
 	then
-		echo "CHROMECAST-OTA: Error Checking for update, Connection Issues"
-		echo "CHROMECAST-OTA: Restarting Service in 5 Minutes"
+		pLog "Error Checking for update, Connection Issues"
+		pLog "Restarting Service in 5 Minutes"
 	
 		# Delete run file
 		rm /tmp/.chromecastOTA
@@ -64,11 +78,11 @@ do
 	# Update is available, do something
 	elif [ "$Response" != "NoUpdate" ]
 	then
-		echo "CHROMECAST-OTA: Update Found! Downloading now!"
+		pLog "Update Found! Downloading now!"
 		busybox wget -q "$Response" -O /cache/eureka_image.zip
 		if [ $? -ne 0 ];
 		then
-			echo "CHROMECAST-OTA: Error Downloading, Restarting"
+			pLog "Error Downloading, Restarting"
 			
 			# Delete the failed update if it exists
 			if [ -f /cache/eureka_image.zip ]
@@ -82,8 +96,8 @@ do
 			continue
 		else
 			#Download was good, now download MD5 and check
-			echo "CHROMECAST-OTA: Update Downloaded Successfully"
-			echo "CHROMECAST-OTA: Downloading and Verifiying MD5 Hash"
+			pLog "Update Downloaded Successfully"
+			pLog "Downloading and Verifiying MD5 Hash"
 			
 			MD5Hash="$Response.md5"
 			busybox wget -q "$MD5Hash" -O /cache/eureka_image.zip.md5
@@ -94,7 +108,7 @@ do
 				# Delete run file
 				rm /tmp/.chromecastOTA
 				
-				echo "CHROMECAST-OTA: Error Downloading MD5, Restarting"
+				pLog "Error Downloading MD5, Restarting"
 				continue
 			else
 			
@@ -105,7 +119,7 @@ do
 				if [ "$MD1" != "OK" ]
 				then
 					# Bad MD5 Match
-					echo "CHROMECAST-OTA: Failed to verify, Deleting files and Restarting"
+					pLog "Failed to verify, Deleting files and Restarting"
 					
 					# Delete the failed update if it exists
 					rm /cache/eureka_image.zip /cache/eureka_image.zip.md5
@@ -115,7 +129,7 @@ do
 					continue
 				else
 					# All went good
-					echo "CHROMECAST-OTA: File Verified Successfully!"
+					pLog "File Verified Successfully!"
 					
 					# Delete md5 file as no need to keep it
 					rm /cache/eureka_image.zip.md5
@@ -126,17 +140,20 @@ do
 					# we do this as a file needs to exist for content_shel ota update to work
 					touch /cache/ota.zip
 					
-					echo "CHROMECAST-OTA: Rebooting into Flashcast To Update..."
+					pLog "Rebooting into Flashcast To Update..."
 					curl -H "Content-Type: application/json" http://localhost:8008/setup/reboot -d '{"params":"ota"}' -X POST
+				
+					#Sleep for 5 minutes as the curl based reboot can take a minute to complete
+					sleep 300
 				fi
 			fi
 		fi
 	else
-		echo "CHROMECAST-OTA: No Update Required!"
+		pLog "No Update Required!"
 	fi
 	
 	# Sleep a while
-	echo "CHROMECAST-OTA: Sleeping 20 hours"
+	pLog "Sleeping 20 hours"
 	sleep 72000
 	
 	# Delete run file
