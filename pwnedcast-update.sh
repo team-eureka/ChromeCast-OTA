@@ -19,8 +19,8 @@ do
 		# Delete run file
 		rm /tmp/.pwnedcastOTA
 		
-		# Somehow, if we break out, exit, do NOT continue
-		exit 0
+		# Somehow, if we break out, exit, do NOT go through the rest of the code
+		continue
 	fi
 	
 	# Are we already running?
@@ -59,8 +59,8 @@ do
 		rm /tmp/.pwnedcastOTA
 	
 		sleep 300
-		exit 1
-	
+		continue
+		
 	# Update is available, do something
 	elif [ "$Response" != "NoUpdate" ]
 	then
@@ -68,7 +68,7 @@ do
 		busybox wget -q "$Response" -O /cache/eureka_image.zip
 		if [ $? -ne 0 ];
 		then
-			echo "PWNEDCAST-OTA: Error Downloading, Terminating!"
+			echo "PWNEDCAST-OTA: Error Downloading, Restarting"
 			
 			# Delete the failed update if it exists
 			if [ -f /cache/eureka_image.zip ]
@@ -79,7 +79,7 @@ do
 			# Delete run file
 			rm /tmp/.pwnedcastOTA
 			
-			exit 1
+			continue
 		else
 			#Download was good, now download MD5 and check
 			echo "PWNEDCAST-OTA: Update Downloaded Successfully"
@@ -94,8 +94,8 @@ do
 				# Delete run file
 				rm /tmp/.pwnedcastOTA
 				
-				echo "PWNEDCAST-OTA: Error Downloading MD5, Terminating!"
-				exit 1
+				echo "PWNEDCAST-OTA: Error Downloading MD5, Restarting"
+				continue
 			else
 			
 				# Check of MD5 is OK
@@ -105,14 +105,14 @@ do
 				if [ "$MD1" != "OK" ]
 				then
 					# Bad MD5 Match
-					echo "PWNEDCAST-OTA: Failed to verify, Deleting files and terminating."
+					echo "PWNEDCAST-OTA: Failed to verify, Deleting files and Restarting"
 					
 					# Delete the failed update if it exists
 					rm /cache/eureka_image.zip /cache/eureka_image.zip.md5
 					
 					# Delete run file
 					rm /tmp/.pwnedcastOTA
-					exit 1
+					continue
 				else
 					# All went good
 					echo "PWNEDCAST-OTA: File Verified Successfully!"
