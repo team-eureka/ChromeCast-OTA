@@ -126,6 +126,7 @@ do
 					
 					# Delete run file
 					rm /tmp/.chromecastOTA
+					
 					continue
 				else
 					# All went good
