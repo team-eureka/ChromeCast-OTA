@@ -26,7 +26,17 @@ do
 	pLog "Running $ROMName-OTA Updater!"
 
 	# Are we allowed to run?
-	if [ -f /chrome/disable_ota ]
+	if test -f "/usr/bin/EurekaSettings" ; then
+		DISABLE_OTA="$(EurekaSettings get EurekaRom ota)"
+	else
+		if test -f "/chrome/disable_ota" ; then
+			DISABLE_OTA="1"
+		else
+			DISABLE_OTA="0"
+		fi
+	fi
+	
+	if [ $DISABLE_OTA -eq "1" ]
 	then
 		pLog "OTA updates disabled per user request, Terminating"
 		
