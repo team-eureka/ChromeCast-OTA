@@ -30,13 +30,13 @@ do
 		DISABLE_OTA="$(EurekaSettings get EurekaRom ota)"
 	else
 		if test -f "/chrome/disable_ota" ; then
-			DISABLE_OTA="1"
-		else
 			DISABLE_OTA="0"
+		else
+			DISABLE_OTA="1"
 		fi
 	fi
 	
-	if [ $DISABLE_OTA -eq "1" ]
+	if [ $DISABLE_OTA -eq "0" ]
 	then
 		pLog "OTA updates disabled per user request, Terminating"
 		
