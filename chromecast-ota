@@ -9,7 +9,7 @@ BuildRevision="$(cat /chrome/pwnedcast_ver)"
 SerialHash=`busybox sha1sum /factory/serial.txt | busybox awk '{ print $1 }'` # We only use your serial hash
 
 #URL for the Update Server
-URL="http://ota.team-eureka.com/ota/update.php?version=$BuildVersion-$BuildRevision&serial=$SerialHash"
+URL="http://ota.team-eureka.com/ota/update.php?version=$BuildVersion.$BuildRevision&serial=$SerialHash"
 
 # Prefixed log messages are easier to distinguish
 pLog() {
