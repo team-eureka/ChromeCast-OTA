@@ -5,7 +5,7 @@ ROMName="EurekaROM"
 
 # Build version, revision and device serial hash, normally no need to change these
 BuildVersion="$(getprop ro.build.version.incremental)"
-BuildRevision="$(cat /chrome/pwnedcast_ver)"
+BuildRevision="$(cat /system/etc/chromecast-ota.rev)"
 SerialHash=`busybox sha1sum /factory/serial.txt | busybox awk '{ print $1 }'` # We only use your serial hash
 
 #URL for the Update Server
@@ -29,7 +29,7 @@ do
 	if test -f "/usr/bin/EurekaSettings" ; then
 		DISABLE_OTA="$(EurekaSettings get EurekaRom ota)"
 	else
-		if test -f "/chrome/disable_ota" ; then
+		if test -f "/system/etc/chromecast-ota.rev" ; then
 			DISABLE_OTA="0"
 		else
 			DISABLE_OTA="1"
