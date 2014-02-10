@@ -36,6 +36,14 @@ do
 		fi
 	fi
 	
+	# If force update file exists, we will force an update
+	if [ -f /tmp/.chromecastOTAForce ]
+	then
+		pLog "Force update check file found, forcing check"
+		DISABLE_OTA="1"
+	fi
+	
+	# Are OTA's Disabled?
 	if [ $DISABLE_OTA -eq "0" ]
 	then
 		pLog "OTA updates disabled per user request, Terminating"
