@@ -41,6 +41,7 @@ do
 	then
 		pLog "Force update check file found, forcing check"
 		DISABLE_OTA="1"
+		rm /tmp/.chromecastOTAForce
 	fi
 	
 	# Are OTA's Disabled?
