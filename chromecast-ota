@@ -41,6 +41,10 @@ do
 	then
 		pLog "Force update check file found, forcing check"
 		DISABLE_OTA="1"
+		
+		# Use force URL to ignore rollout range
+		URL="$URL&force=true"
+		
 		rm /tmp/.chromecastOTAForce
 	fi
 	
