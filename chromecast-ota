@@ -112,6 +112,10 @@ do
 			# Delete run file
 			rm /tmp/.chromecastOTA
 			
+			# Sleep a while
+			pLog "Sleeping 20 hours"
+			sleep 72000
+			
 			continue
 		else
 			#Download was good, now download MD5 and check
@@ -128,6 +132,11 @@ do
 				rm /tmp/.chromecastOTA
 				
 				pLog "Error Downloading MD5, Restarting"
+				
+				# Sleep a while
+				pLog "Sleeping 20 hours"
+				sleep 72000
+				
 				continue
 			else
 			
@@ -145,6 +154,10 @@ do
 					
 					# Delete run file
 					rm /tmp/.chromecastOTA
+					
+					# Sleep a while
+					pLog "Sleeping 20 hours"
+					sleep 72000
 					
 					continue
 				else
