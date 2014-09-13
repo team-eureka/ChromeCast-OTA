@@ -82,7 +82,7 @@ do
     if [ -f /tmp/forceupdate ]
 	then
 		rm /tmp/forceupdate
-        URLWithForce = "${URL}&forec=true"
+        URLWithForce = "${URL}&force=true"
     # Else is needed here. Otherwise update will always be forced.
     else
         URLWithForce = $URL
