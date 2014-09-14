@@ -79,9 +79,9 @@ do
 	fi
     
     # Check if update is forced
-    if [ -f /tmp/forceupdate ]
+    if [ -f /tmp/.ignoreStagedRollout ]
 	then
-		rm /tmp/forceupdate
+		rm /tmp/.ignoreStagedRollout
         URLWithForce = "${URL}&force=true"
     # Else is needed here. Otherwise update will always be forced.
     else
