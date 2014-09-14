@@ -77,10 +77,20 @@ do
 	then
 		rm /cache/eureka_image.zip
 	fi
+    
+    # Check if update is forced
+    if [ -f /tmp/.ignoreStagedRollout ]
+	then
+		rm /tmp/.ignoreStagedRollout
+        URLWithForce = "${URL}&force=true"
+    # Else is needed here. Otherwise update will always be forced.
+    else
+        URLWithForce = $URL
+	fi
 
 	# Check for the update
 	pLog "Checking for Updates"
-	Response="$(busybox wget -q $URL -O - )"
+	Response="$(busybox wget -q $URLWithForce -O - )"
 
 	# Error checking for update, due to server/web issues
 	if [ $? -ne 0 ]
