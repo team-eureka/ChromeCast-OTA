@@ -13,7 +13,7 @@ URL="http://ota.team-eureka.com/ota/update.php?version=$BuildVersion.$BuildRevis
 
 # Prefixed log messages are easier to distinguish
 pLog() {
-        echo "$ROMName-OTA: $1"
+		echo "$ROMName-OTA: $1"
 }
 
 ##################################
@@ -77,15 +77,15 @@ do
 	then
 		rm /cache/eureka_image.zip
 	fi
-    
-    # Check if update is forced
-    if [ -f /tmp/.ignoreStagedRollout ]
+	
+	# Check if update is forced
+	if [ -f /tmp/.ignoreStagedRollout ]
 	then
 		rm /tmp/.ignoreStagedRollout
-        URLWithForce = "${URL}&force=true"
-    # Else is needed here. Otherwise update will always be forced.
-    else
-        URLWithForce = $URL
+		URLWithForce="${URL}&force=true"
+	# Else is needed here. Otherwise update will always be forced.
+	else
+		URLWithForce=$URL
 	fi
 
 	# Check for the update
