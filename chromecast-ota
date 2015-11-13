@@ -1,4 +1,4 @@
-#!/bin/busybox
+#!/bin/busybox sh
 
 # ROM Name - Used in logcat output
 ROMName="EurekaROM"
